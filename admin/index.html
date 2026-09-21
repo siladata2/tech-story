@@ -1,0 +1,2768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Tech Story Admin</title>
+
+  <style>
+    :root {
+      --bg: #070b14;
+      --panel: #0d1422;
+      --panel2: #111b2d;
+      --border: #1e2b42;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --primary: #2563eb;
+      --primary2: #38bdf8;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --warning: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ==============================
+       LOGIN
+    ============================== */
+
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(
+          circle at top,
+          #102550 0,
+          #070b14 45%
+        );
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 410px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      background: rgba(13, 20, 34, 0.96);
+      border-radius: 24px;
+      box-shadow:
+        0 25px 70px rgba(0, 0, 0, .45);
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .brand-logo {
+      width: 74px;
+      height: 74px;
+      margin: auto;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        linear-gradient(
+          135deg,
+          #38bdf8,
+          #2563eb
+        );
+      color: white;
+      font-size: 25px;
+      font-weight: 900;
+      box-shadow:
+        0 15px 35px rgba(37, 99, 235, .3);
+    }
+
+    .brand h1 {
+      margin-top: 16px;
+      font-size: 25px;
+    }
+
+    .brand p {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 13px 14px;
+      color: var(--text);
+      background: #09111f;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 180px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--primary2);
+    }
+
+    .primary-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 14px;
+      color: white;
+      font-weight: 800;
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary2),
+          var(--primary)
+        );
+    }
+
+    .error {
+      color: #f87171;
+      font-size: 13px;
+      margin-bottom: 14px;
+      min-height: 18px;
+    }
+
+    /* ==============================
+       APP
+    ============================== */
+
+    #adminApp {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 70px;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mini-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary2),
+          var(--primary)
+        );
+      font-weight: 900;
+    }
+
+    .top-title {
+      font-weight: 800;
+    }
+
+    .top-subtitle {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .logout {
+      border: 1px solid var(--border);
+      color: #f87171;
+      background: transparent;
+      padding: 9px 13px;
+      border-radius: 10px;
+    }
+
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 70px);
+    }
+
+    /* ==============================
+       SIDEBAR
+    ============================== */
+
+    .sidebar {
+      width: 240px;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      padding: 18px 12px;
+      flex-shrink: 0;
+    }
+
+    .nav-title {
+      color: #64748b;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 10px 12px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      text-align: left;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 4px;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      color: white;
+      background: var(--panel2);
+    }
+
+    /* ==============================
+       CONTENT
+    ============================== */
+
+    .content {
+      flex: 1;
+      min-width: 0;
+      padding: 26px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .page-head {
+      margin-bottom: 22px;
+    }
+
+    .page-head h2 {
+      font-size: 25px;
+    }
+
+    .page-head p {
+      color: var(--muted);
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    /* ==============================
+       CARDS
+    ============================== */
+
+    .stats {
+      display: grid;
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 9px;
+      font-size: 28px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .panel-head h3 {
+      font-size: 17px;
+    }
+
+    /* ==============================
+       TABLE
+    ============================== */
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th,
+    td {
+      padding: 13px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 5px 8px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .published {
+      background: rgba(34, 197, 94, .12);
+      color: #4ade80;
+    }
+
+    .draft {
+      background: rgba(245, 158, 11, .12);
+      color: #fbbf24;
+    }
+
+    .actions {
+      display: flex;
+      gap: 7px;
+    }
+
+    .small-btn {
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      color: white;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+
+    .delete-btn {
+      color: #f87171;
+    }
+
+    /* ==============================
+       FORM
+    ============================== */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .checks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin: 8px 0 18px;
+    }
+
+    .checks label {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .form-actions button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 18px;
+      color: white;
+      background: var(--primary);
+      font-weight: 700;
+    }
+
+    .secondary {
+      background: var(--panel2) !important;
+      border: 1px solid var(--border) !important;
+    }
+
+    /* ==============================
+       MOBILE
+    ============================== */
+
+    .menu-btn {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      color: white;
+      border-radius: 9px;
+      padding: 8px 10px;
+    }
+
+    @media (max-width: 900px) {
+      .stats {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .sidebar {
+        position: fixed;
+        left: -250px;
+        top: 70px;
+        bottom: 0;
+        z-index: 40;
+        transition: .25s;
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .content {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full {
+        grid-column: auto;
+      }
+
+      .topbar {
+        padding: 0 13px;
+      }
+
+      .top-subtitle {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ==============================
+       LOGIN
+  =============================== -->
+
+  <section id="loginScreen">
+
+    <div class="login-box">
+
+      <div class="brand">
+        <div class="brand-logo">TS</div>
+
+        <h1>Tech Story</h1>
+
+        <p>Admin Control Panel</p>
+      </div>
+
+      <div id="loginError" class="error"></div>
+
+      <form id="loginForm">
+
+        <div class="field">
+          <label>Username</label>
+
+          <input
+            id="username"
+            type="text"
+            autocomplete="username"
+            placeholder="Enter username"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+
+          <input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Enter password"
+            required
+          >
+        </div>
+
+        <button
+          class="primary-btn"
+          type="submit"
+        >
+          Login to Admin
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==============================
+       ADMIN APP
+  =============================== -->
+
+  <section id="adminApp" class="hidden">
+
+    <header class="topbar">
+
+      <div class="top-left">
+
+        <button
+          id="menuBtn"
+          class="menu-btn"
+        >
+          ☰
+        </button>
+
+        <div class="mini-logo">TS</div>
+
+        <div>
+          <div class="top-title">
+            Tech Story
+          </div>
+
+          <div class="top-subtitle">
+            Admin Control Panel
+          </div>
+        </div>
+
+      </div>
+
+      <button
+        id="logoutBtn"
+        class="logout"
+      >
+        Logout
+      </button>
+
+    </header>
+
+
+    <div class="layout">
+
+      <!-- SIDEBAR -->
+
+      <aside id="sidebar" class="sidebar">
+
+        <div class="nav-title">
+          Overview
+        </div>
+
+        <button
+          class="nav-btn active"
+          data-page="dashboard"
+        >
+          Dashboard
+        </button>
+
+        <div class="nav-title">
+          Content
+        </div>
+
+        <button
+          class="nav-btn"
+          data-page="stories"
+        >
+          Stories
+        </button>
+
+        <button
+          class="nav-btn"
+          data-page="addStory"
+        >
+          Add Story
+        </button>
+
+        <button
+          class="nav-btn"
+          data-page="categories"
+        >
+          Categories
+        </button>
+
+        <div class="nav-title">
+          System
+        </div>
+
+        <button
+          class="nav-btn"
+          data-page="notifications"
+        >
+          Notifications
+        </button>
+
+        <button
+          class="nav-btn"
+          data-page="users"
+        >
+          Users
+        </button>
+
+        <button
+          class="nav-btn"
+          data-page="updates"
+        >
+          App Updates
+        </button>
+
+        <button
+          class="nav-btn"
+          data-page="settings"
+        >
+          Settings
+        </button>
+
+      </aside>
+
+
+      <!-- CONTENT -->
+
+      <main class="content">
+
+        <!-- DASHBOARD -->
+
+        <section
+          id="dashboard"
+          class="page active"
+        >
+
+          <div class="page-head">
+            <h2>Dashboard</h2>
+            <p>
+              Manage everything inside Tech Story.
+            </p>
+          </div>
+
+          <div class="stats">
+
+            <div class="stat">
+              <span>Total Stories</span>
+              <strong id="statStories">0</strong>
+            </div>
+
+            <div class="stat">
+              <span>Published</span>
+              <strong id="statPublished">0</strong>
+            </div>
+
+            <div class="stat">
+              <span>Drafts</span>
+              <strong id="statDrafts">0</strong>
+            </div>
+
+            <div class="stat">
+              <span>Users</span>
+              <strong id="statUsers">0</strong>
+            </div>
+
+          </div>
+
+          <div class="panel">
+
+            <div class="panel-head">
+              <h3>Latest Stories</h3>
+
+              <button
+                class="small-btn"
+                onclick="showPage('addStory')"
+              >
+                + Add Story
+              </button>
+            </div>
+
+            <div class="table-wrap">
+
+              <table>
+
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Views</th>
+                  </tr>
+                </thead>
+
+                <tbody id="dashboardStories">
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- STORIES -->
+
+        <section
+          id="stories"
+          class="page"
+        >
+
+          <div class="page-head">
+            <h2>Stories</h2>
+            <p>
+              Manage all stories.
+            </p>
+          </div>
+
+          <div class="panel">
+
+            <div class="panel-head">
+
+              <h3>All Stories</h3>
+
+              <button
+                class="small-btn"
+                onclick="showPage('addStory')"
+              >
+                + Add Story
+              </button>
+
+            </div>
+
+            <div class="table-wrap">
+
+              <table>
+
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Views</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+
+                <tbody id="storiesTable">
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- ADD STORY -->
+
+        <section
+          id="addStory"
+          class="page"
+        >
+
+          <div class="page-head">
+            <h2 id="storyFormTitle">
+              Add Story
+            </h2>
+
+            <p>
+              Create and publish a new Tech Story.
+            </p>
+          </div>
+
+          <div class="panel">
+
+            <form id="storyForm">
+
+              <input
+                id="storyId"
+                type="hidden"
+              >
+
+              <div class="form-grid">
+
+                <div class="field">
+                  <label>Title</label>
+
+                  <input
+                    id="storyTitle"
+                    required
+                    placeholder="Story title"
+                  >
+                </div>
+
+                <div class="field">
+                  <label>Category</label>
+
+                  <select id="storyCategory">
+                    <option value="All">
+                      All
+                    </option>
+                    <option value="AI">
+                      AI
+                    </option>
+                    <option value="Mobile">
+                      Mobile
+                    </option>
+                    <option value="Gaming">
+                      Gaming
+                    </option>
+                    <option value="Security">
+                      Security
+                    </option>
+                    <option value="Apps">
+                      Apps
+                    </option>
+                    <option value="Future">
+                      Future
+                    </option>
+                  </select>
+                </div>
+
+                <div class="field full">
+                  <label>Description</label>
+
+                  <textarea
+                    id="storyDescription"
+                    style="min-height:100px"
+                    placeholder="Short description"
+                  ></textarea>
+                </div>
+
+                <div class="field">
+                  <label>Cover Image URL</label>
+
+                  <input
+                    id="storyImage"
+                    type="url"
+                    placeholder="https://..."
+                  >
+                </div>
+
+                <div class="field">
+                  <label>Author</label>
+
+                  <input
+                    id="storyAuthor"
+                    value="Sila Tech"
+                  >
+                </div>
+
+                <div class="field">
+                  <label>Read Time (minutes)</label>
+
+                  <input
+                    id="storyReadTime"
+                    type="number"
+                    min="1"
+                    value="3"
+                  >
+                </div>
+
+                <div class="field">
+                  <label>Status</label>
+
+                  <select id="storyStatus">
+                    <option value="draft">
+                      Draft
+                    </option>
+
+                    <option value="published">
+                      Published
+                    </option>
+                  </select>
+                </div>
+
+                <div class="field full">
+                  <label>Article Content</label>
+
+                  <textarea
+                    id="storyContent"
+                    required
+                    placeholder="Write your article here..."
+                  ></textarea>
+                </div>
+
+              </div>
+
+              <div class="checks">
+
+                <label>
+                  <input
+                    id="storyFeatured"
+                    type="checkbox"
+                  >
+                  Featured
+                </label>
+
+                <label>
+                  <input
+                    id="storyTrending"
+                    type="checkbox"
+                  >
+                  Trending
+                </label>
+
+              </div>
+
+              <div class="form-actions">
+
+                <button type="submit">
+                  Save Story
+                </button>
+
+                <button
+                  type="button"
+                  class="secondary"
+                  onclick="resetStoryForm()"
+                >
+                  Clear
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </section>
+
+
+        <!-- CATEGORIES -->
+
+        <section
+          id="categories"
+          class="page"
+        >
+
+          <div class="page-head">
+            <h2>Categories</h2>
+            <p>
+              Manage Tech Story categories.
+            </p>
+          </div>
+
+          <div class="panel">
+
+            <form id="categoryForm">
+
+              <div class="form-grid">
+
+                <div class="field">
+                  <label>Category Name</label>
+
+                  <input
+                    id="categoryName"
+                    required
+                    placeholder="Example: AI"
+                  >
+                </div>
+
+                <div class="field">
+                  <label>Image URL</label>
+
+                  <input
+                    id="categoryImage"
+                    type="url"
+                    placeholder="https://..."
+                  >
+                </div>
+
+                <div class="field full">
+                  <label>Description</label>
+
+                  <textarea
+                    id="categoryDescription"
+                    style="min-height:100px"
+                  ></textarea>
+                </div>
+
+              </div>
+
+              <div class="form-actions">
+
+                <button type="submit">
+                  Add Category
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+          <div class="panel">
+
+            <div class="panel-head">
+              <h3>Categories</h3>
+            </div>
+
+            <div
+              id="categoriesList"
+            ></div>
+
+          </div>
+
+        </section>
+
+
+        <!-- NOTIFICATIONS -->
+
+        <section
+          id="notifications"
+          class="page"
+        >
+
+          <div class="page-head">
+            <h2>Notifications</h2>
+
+            <p>
+              Create announcements and update notifications.
+            </p>
+          </div>
+
+          <div class="panel">
+
+            <form id="notificationForm">
+
+              <div class="form-grid">
+
+                <div class="field">
+                  <label>Title</label>
+
+                  <input
+                    id="notificationTitle"
+                    required
+                    placeholder="New Tech Story"
+                  >
+                </div>
+
+                <div class="field">
+                  <label>Type</label>
+
+                  <select id="notificationType">
+
+                    <option value="announcement">
+                      Announcement
+                    </option>
+
+                    <option value="story">
+                      Story
+                    </option>
+
+                    <option value="update">
+                      App Update
+                    </option>
+
+                    <option value="system">
+                      System
+                    </option>
+
+                  </select>
+                </div>
+
+                <div class="field full">
+                  <label>Message</label>
+
+                  <textarea
+                    id="notificationMessage"
+                    required
+                    style="min-height:120px"
+                  ></textarea>
+                </div>
+
+              </div>
+
+              <div class="form-actions">
+
+                <button type="submit">
+                  Create Notification
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </section>
+
+
+        <!-- USERS -->
+
+        <section
+          id="users"
+          class="page"
+        >
+
+          <div class="page-head">
+            <h2>Users</h2>
+
+            <p>
+              View registered Tech Story users.
+            </p>
+          </div>
+
+          <div class="panel">
+
+            <div class="table-wrap">
+
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Notifications</th>
+                    <th>Joined</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="usersTable">
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- UPDATES -->
+
+        <section
+          id="updates"
+          class="page"
+        >
+
+          <div class="page-head">
+
+            <h2>App Updates</h2>
+
+            <p>
+              Control the version and APK update information.
+            </p>
+
+          </div>
+
+          <div class="panel">
+
+            <form id="updateForm">
+
+              <div class="form-grid">
+
+                <div class="field">
+                  <label>Latest Version</label>
+
+                  <input
+                    id="latestVersion"
+                    placeholder="1.0.1"
+                    required
+                  >
+                </div>
+
+                <div class="field">
+                  <label>Minimum Version</label>
+
+                  <input
+                    id="minimumVersion"
+                    placeholder="1.0.0"
+                    required
+                  >
+                </div>
+
+                <div class="field full">
+
+                  <label>APK Update URL</label>
+
+                  <input
+                    id="updateUrl"
+                    type="url"
+                    placeholder="GitHub Release APK URL"
+                  >
+
+                </div>
+
+                <div class="field full">
+
+                  <label>Update Message</label>
+
+                  <textarea
+                    id="updateMessage"
+                    style="min-height:110px"
+                  ></textarea>
+
+                </div>
+
+              </div>
+
+              <div class="form-actions">
+
+                <button type="submit">
+                  Save Update Settings
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </section>
+
+
+        <!-- SETTINGS -->
+
+        <section
+          id="settings"
+          class="page"
+        >
+
+          <div class="page-head">
+
+            <h2>Settings</h2>
+
+            <p>
+              General Tech Story application settings.
+            </p>
+
+          </div>
+
+          <div class="panel">
+
+            <form id="settingsForm">
+
+              <div class="checks">
+
+                <label>
+
+                  <input
+                    id="maintenanceMode"
+                    type="checkbox"
+                  >
+
+                  Maintenance Mode
+
+                </label>
+
+              </div>
+
+              <div class="field">
+
+                <label>
+                  Maintenance Message
+                </label>
+
+                <textarea
+                  id="maintenanceMessage"
+                  style="min-height:110px"
+                ></textarea>
+
+              </div>
+
+              <div class="form-actions">
+
+                <button type="submit">
+                  Save Settings
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==============================
+       JAVASCRIPT
+  =============================== -->
+
+  <script>
+
+    /*
+      CHANGE THIS AFTER HOSTING BACKEND
+
+      Example:
+
+      const API_URL =
+        "https://your-backend-domain.com/api";
+    */
+
+    const API_URL = "http://localhost:5000/api";
+
+    let token =
+      localStorage.getItem(
+        "techStoryAdminToken"
+      );
+
+    let stories = [];
+    let editingStoryId = null;
+
+
+    /* ==============================
+       HELPERS
+    =============================== */
+
+    function authHeaders() {
+      return {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      };
+    }
+
+
+    async function api(
+      endpoint,
+      options = {}
+    ) {
+      const response = await fetch(
+        API_URL + endpoint,
+        {
+          ...options,
+          headers: {
+            ...(options.body
+              ? {
+                  "Content-Type":
+                    "application/json"
+                }
+              : {}),
+            ...(token
+              ? {
+                  Authorization:
+                    `Bearer ${token}`
+                }
+              : {}),
+            ...(options.headers || {})
+          }
+        }
+      );
+
+      const data =
+        await response.json()
+          .catch(() => ({}));
+
+      if (
+        response.status === 401
+      ) {
+        logout();
+        throw new Error(
+          "Session expired"
+        );
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+          "Request failed"
+        );
+      }
+
+      return data;
+    }
+
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+
+    /* ==============================
+       LOGIN
+    =============================== */
+
+    document
+      .getElementById("loginForm")
+      .addEventListener(
+        "submit",
+        async (event) => {
+
+          event.preventDefault();
+
+          const username =
+            document
+              .getElementById("username")
+              .value
+              .trim();
+
+          const password =
+            document
+              .getElementById("password")
+              .value;
+
+          const error =
+            document
+              .getElementById("loginError");
+
+          error.textContent = "";
+
+          try {
+
+            const data =
+              await fetch(
+                API_URL +
+                "/auth/login",
+                {
+                  method: "POST",
+
+                  headers: {
+                    "Content-Type":
+                      "application/json"
+                  },
+
+                  body:
+                    JSON.stringify({
+                      username,
+                      password
+                    })
+                }
+              ).then(async response => {
+
+                const result =
+                  await response
+                    .json()
+                    .catch(() => ({}));
+
+                if (!response.ok) {
+                  throw new Error(
+                    result.message ||
+                    "Login failed"
+                  );
+                }
+
+                return result;
+
+              });
+
+            token = data.token;
+
+            localStorage.setItem(
+              "techStoryAdminToken",
+              token
+            );
+
+            showAdmin();
+
+          } catch (err) {
+
+            error.textContent =
+              err.message ||
+              "Login failed";
+
+          }
+
+        }
+      );
+
+
+    function showAdmin() {
+
+      document
+        .getElementById(
+          "loginScreen"
+        )
+        .classList.add("hidden");
+
+      document
+        .getElementById(
+          "adminApp"
+        )
+        .classList.remove("hidden");
+
+      loadDashboard();
+
+    }
+
+
+    function logout() {
+
+      token = null;
+
+      localStorage.removeItem(
+        "techStoryAdminToken"
+      );
+
+      document
+        .getElementById(
+          "adminApp"
+        )
+        .classList.add("hidden");
+
+      document
+        .getElementById(
+          "loginScreen"
+        )
+        .classList.remove("hidden");
+
+    }
+
+
+    document
+      .getElementById("logoutBtn")
+      .addEventListener(
+        "click",
+        logout
+      );
+
+
+    /* ==============================
+       NAVIGATION
+    =============================== */
+
+    function showPage(pageId) {
+
+      document
+        .querySelectorAll(".page")
+        .forEach(page => {
+          page.classList.remove(
+            "active"
+          );
+        });
+
+      const page =
+        document.getElementById(
+          pageId
+        );
+
+      if (page) {
+        page.classList.add(
+          "active"
+        );
+      }
+
+      document
+        .querySelectorAll(".nav-btn")
+        .forEach(button => {
+
+          button.classList.toggle(
+            "active",
+            button.dataset.page ===
+            pageId
+          );
+
+        });
+
+      document
+        .getElementById("sidebar")
+        .classList.remove("open");
+
+      if (pageId === "dashboard") {
+        loadDashboard();
+      }
+
+      if (pageId === "stories") {
+        loadStories();
+      }
+
+      if (pageId === "categories") {
+        loadCategories();
+      }
+
+      if (pageId === "users") {
+        loadUsers();
+      }
+
+      if (pageId === "updates") {
+        loadSettings();
+      }
+
+      if (pageId === "settings") {
+        loadSettings();
+      }
+    }
+
+
+    document
+      .querySelectorAll(".nav-btn")
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+            showPage(
+              button.dataset.page
+            );
+          }
+        );
+
+      });
+
+
+    document
+      .getElementById("menuBtn")
+      .addEventListener(
+        "click",
+        () => {
+          document
+            .getElementById(
+              "sidebar"
+            )
+            .classList.toggle(
+              "open"
+            );
+        }
+      );
+
+
+    /* ==============================
+       DASHBOARD
+    =============================== */
+
+    async function loadDashboard() {
+
+      try {
+
+        const data =
+          await api(
+            "/admin/stories"
+          );
+
+        stories =
+          data.stories || [];
+
+        const published =
+          stories.filter(
+            story =>
+              story.status ===
+              "published"
+          ).length;
+
+        const drafts =
+          stories.filter(
+            story =>
+              story.status ===
+              "draft"
+          ).length;
+
+        document
+          .getElementById(
+            "statStories"
+          )
+          .textContent =
+          stories.length;
+
+        document
+          .getElementById(
+            "statPublished"
+          )
+          .textContent =
+          published;
+
+        document
+          .getElementById(
+            "statDrafts"
+          )
+          .textContent =
+          drafts;
+
+        try {
+
+          const users =
+            await api(
+              "/admin/users"
+            );
+
+          document
+            .getElementById(
+              "statUsers"
+            )
+            .textContent =
+            users.users?.length || 0;
+
+        } catch {
+          document
+            .getElementById(
+              "statUsers"
+            )
+            .textContent = "0";
+        }
+
+        renderDashboardStories();
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    }
+
+
+    function renderDashboardStories() {
+
+      const tbody =
+        document.getElementById(
+          "dashboardStories"
+        );
+
+      tbody.innerHTML =
+        stories
+          .slice(0, 8)
+          .map(story => {
+
+            const statusClass =
+              story.status ===
+              "published"
+                ? "published"
+                : "draft";
+
+            return `
+              <tr>
+
+                <td>
+                  ${escapeHTML(
+                    story.title
+                  )}
+                </td>
+
+                <td>
+                  ${escapeHTML(
+                    story.category
+                  )}
+                </td>
+
+                <td>
+                  <span
+                    class="badge ${statusClass}"
+                  >
+                    ${escapeHTML(
+                      story.status
+                    )}
+                  </span>
+                </td>
+
+                <td>
+                  ${story.views || 0}
+                </td>
+
+              </tr>
+            `;
+
+          })
+          .join("");
+
+    }
+
+
+    /* ==============================
+       STORIES
+    =============================== */
+
+    async function loadStories() {
+
+      try {
+
+        const data =
+          await api(
+            "/admin/stories"
+          );
+
+        stories =
+          data.stories || [];
+
+        renderStories();
+
+      } catch (error) {
+
+        alert(error.message);
+
+      }
+
+    }
+
+
+    function renderStories() {
+
+      const tbody =
+        document.getElementById(
+          "storiesTable"
+        );
+
+      tbody.innerHTML =
+        stories
+          .map(story => {
+
+            const statusClass =
+              story.status ===
+              "published"
+                ? "published"
+                : "draft";
+
+            return `
+              <tr>
+
+                <td>
+                  ${escapeHTML(
+                    story.title
+                  )}
+                </td>
+
+                <td>
+                  ${escapeHTML(
+                    story.category
+                  )}
+                </td>
+
+                <td>
+                  <span
+                    class="badge ${statusClass}"
+                  >
+                    ${escapeHTML(
+                      story.status
+                    )}
+                  </span>
+                </td>
+
+                <td>
+                  ${story.views || 0}
+                </td>
+
+                <td>
+
+                  <div class="actions">
+
+                    <button
+                      class="small-btn"
+                      onclick="editStory('${story._id}')"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      class="small-btn delete-btn"
+                      onclick="deleteStory('${story._id}')"
+                    >
+                      Delete
+                    </button>
+
+                  </div>
+
+                </td>
+
+              </tr>
+            `;
+
+          })
+          .join("");
+
+    }
+
+
+    /* ==============================
+       CREATE / EDIT STORY
+    =============================== */
+
+    document
+      .getElementById("storyForm")
+      .addEventListener(
+        "submit",
+        async event => {
+
+          event.preventDefault();
+
+          const id =
+            document
+              .getElementById(
+                "storyId"
+              )
+              .value;
+
+          const payload = {
+
+            title:
+              document
+                .getElementById(
+                  "storyTitle"
+                )
+                .value
+                .trim(),
+
+            description:
+              document
+                .getElementById(
+                  "storyDescription"
+                )
+                .value
+                .trim(),
+
+            content:
+              document
+                .getElementById(
+                  "storyContent"
+                )
+                .value,
+
+            image:
+              document
+                .getElementById(
+                  "storyImage"
+                )
+                .value
+                .trim(),
+
+            author:
+              document
+                .getElementById(
+                  "storyAuthor"
+                )
+                .value
+                .trim(),
+
+            category:
+              document
+                .getElementById(
+                  "storyCategory"
+                )
+                .value,
+
+            readTime:
+              Number(
+                document
+                  .getElementById(
+                    "storyReadTime"
+                  )
+                  .value
+              ),
+
+            status:
+              document
+                .getElementById(
+                  "storyStatus"
+                )
+                .value,
+
+            featured:
+              document
+                .getElementById(
+                  "storyFeatured"
+                )
+                .checked,
+
+            trending:
+              document
+                .getElementById(
+                  "storyTrending"
+                )
+                .checked
+
+          };
+
+          try {
+
+            if (id) {
+
+              await api(
+                `/admin/stories/${id}`,
+                {
+                  method: "PUT",
+                  body:
+                    JSON.stringify(
+                      payload
+                    )
+                }
+              );
+
+              alert(
+                "Story updated successfully."
+              );
+
+            } else {
+
+              await api(
+                "/admin/stories",
+                {
+                  method: "POST",
+                  body:
+                    JSON.stringify(
+                      payload
+                    )
+                }
+              );
+
+              alert(
+                "Story created successfully."
+              );
+
+            }
+
+            resetStoryForm();
+
+            showPage("stories");
+
+          } catch (error) {
+
+            alert(error.message);
+
+          }
+
+        }
+      );
+
+
+    function editStory(id) {
+
+      const story =
+        stories.find(
+          item =>
+            item._id === id
+        );
+
+      if (!story) return;
+
+      document
+        .getElementById(
+          "storyFormTitle"
+        )
+        .textContent =
+        "Edit Story";
+
+      document
+        .getElementById(
+          "storyId"
+        )
+        .value =
+        story._id;
+
+      document
+        .getElementById(
+          "storyTitle"
+        )
+        .value =
+        story.title || "";
+
+      document
+        .getElementById(
+          "storyDescription"
+        )
+        .value =
+        story.description || "";
+
+      document
+        .getElementById(
+          "storyContent"
+        )
+        .value =
+        story.content || "";
+
+      document
+        .getElementById(
+          "storyImage"
+        )
+        .value =
+        story.image || "";
+
+      document
+        .getElementById(
+          "storyAuthor"
+        )
+        .value =
+        story.author || "Sila Tech";
+
+      document
+        .getElementById(
+          "storyCategory"
+        )
+        .value =
+        story.category || "All";
+
+      document
+        .getElementById(
+          "storyReadTime"
+        )
+        .value =
+        story.readTime || 3;
+
+      document
+        .getElementById(
+          "storyStatus"
+        )
+        .value =
+        story.status || "draft";
+
+      document
+        .getElementById(
+          "storyFeatured"
+        )
+        .checked =
+        Boolean(
+          story.featured
+        );
+
+      document
+        .getElementById(
+          "storyTrending"
+        )
+        .checked =
+        Boolean(
+          story.trending
+        );
+
+      showPage("addStory");
+
+    }
+
+
+    async function deleteStory(id) {
+
+      if (
+        !confirm(
+          "Delete this story?"
+        )
+      ) {
+        return;
+      }
+
+      try {
+
+        await api(
+          `/admin/stories/${id}`,
+          {
+            method: "DELETE"
+          }
+        );
+
+        await loadStories();
+
+      } catch (error) {
+
+        alert(error.message);
+
+      }
+
+    }
+
+
+    function resetStoryForm() {
+
+      document
+        .getElementById(
+          "storyForm"
+        )
+        .reset();
+
+      document
+        .getElementById(
+          "storyId"
+        )
+        .value = "";
+
+      document
+        .getElementById(
+          "storyAuthor"
+        )
+        .value =
+        "Sila Tech";
+
+      document
+        .getElementById(
+          "storyFormTitle"
+        )
+        .textContent =
+        "Add Story";
+
+    }
+
+
+    /* ==============================
+       CATEGORIES
+    =============================== */
+
+    document
+      .getElementById(
+        "categoryForm"
+      )
+      .addEventListener(
+        "submit",
+        async event => {
+
+          event.preventDefault();
+
+          try {
+
+            await api(
+              "/admin/categories",
+              {
+                method: "POST",
+
+                body:
+                  JSON.stringify({
+
+                    name:
+                      document
+                        .getElementById(
+                          "categoryName"
+                        )
+                        .value
+                        .trim(),
+
+                    description:
+                      document
+                        .getElementById(
+                          "categoryDescription"
+                        )
+                        .value
+                        .trim(),
+
+                    image:
+                      document
+                        .getElementById(
+                          "categoryImage"
+                        )
+                        .value
+                        .trim()
+
+                  })
+              }
+            );
+
+            event.target.reset();
+
+            await loadCategories();
+
+            alert(
+              "Category added."
+            );
+
+          } catch (error) {
+
+            alert(error.message);
+
+          }
+
+        }
+      );
+
+
+    async function loadCategories() {
+
+      try {
+
+        const data =
+          await api(
+            "/categories"
+          );
+
+        const categories =
+          data.categories || [];
+
+        document
+          .getElementById(
+            "categoriesList"
+          )
+          .innerHTML =
+          categories
+            .map(category => `
+              <div
+                class="panel"
+                style="margin-bottom:10px"
+              >
+
+                <strong>
+                  ${escapeHTML(
+                    category.name
+                  )}
+                </strong>
+
+                <p
+                  style="
+                    color:var(--muted);
+                    margin-top:5px;
+                    font-size:13px;
+                  "
+                >
+                  ${escapeHTML(
+                    category.description
+                  )}
+                </p>
+
+              </div>
+            `)
+            .join("");
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    }
+
+
+    /* ==============================
+       NOTIFICATIONS
+    =============================== */
+
+    document
+      .getElementById(
+        "notificationForm"
+      )
+      .addEventListener(
+        "submit",
+        async event => {
+
+          event.preventDefault();
+
+          try {
+
+            await api(
+              "/admin/notifications",
+              {
+                method: "POST",
+
+                body:
+                  JSON.stringify({
+
+                    title:
+                      document
+                        .getElementById(
+                          "notificationTitle"
+                        )
+                        .value
+                        .trim(),
+
+                    message:
+                      document
+                        .getElementById(
+                          "notificationMessage"
+                        )
+                        .value
+                        .trim(),
+
+                    type:
+                      document
+                        .getElementById(
+                          "notificationType"
+                        )
+                        .value
+
+                  })
+              }
+            );
+
+            event.target.reset();
+
+            alert(
+              "Notification created."
+            );
+
+          } catch (error) {
+
+            alert(error.message);
+
+          }
+
+        }
+      );
+
+
+    /* ==============================
+       USERS
+    =============================== */
+
+    async function loadUsers() {
+
+      try {
+
+        const data =
+          await api(
+            "/admin/users"
+          );
+
+        const users =
+          data.users || [];
+
+        document
+          .getElementById(
+            "usersTable"
+          )
+          .innerHTML =
+          users
+            .map(user => `
+
+              <tr>
+
+                <td>
+                  ${escapeHTML(
+                    user.name || "-"
+                  )}
+                </td>
+
+                <td>
+                  ${escapeHTML(
+                    user.email || "-"
+                  )}
+                </td>
+
+                <td>
+                  ${
+                    user.notificationsEnabled
+                      ? "Enabled"
+                      : "Disabled"
+                  }
+                </td>
+
+                <td>
+                  ${
+                    user.createdAt
+                      ? new Date(
+                          user.createdAt
+                        ).toLocaleDateString()
+                      : "-"
+                  }
+                </td>
+
+              </tr>
+
+            `)
+            .join("");
+
+      } catch (error) {
+
+        alert(error.message);
+
+      }
+
+    }
+
+
+    /* ==============================
+       SETTINGS / UPDATES
+    =============================== */
+
+    async function loadSettings() {
+
+      try {
+
+        const data =
+          await api(
+            "/settings"
+          );
+
+        const settings =
+          data.settings || {};
+
+        document
+          .getElementById(
+            "latestVersion"
+          )
+          .value =
+          settings.latestVersion ||
+          "1.0.0";
+
+        document
+          .getElementById(
+            "minimumVersion"
+          )
+          .value =
+          settings.minimumVersion ||
+          "1.0.0";
+
+        document
+          .getElementById(
+            "updateUrl"
+          )
+          .value =
+          settings.updateUrl ||
+          "";
+
+        document
+          .getElementById(
+            "updateMessage"
+          )
+          .value =
+          settings.updateMessage ||
+          "";
+
+        document
+          .getElementById(
+            "maintenanceMode"
+          )
+          .checked =
+          Boolean(
+            settings.maintenanceMode
+          );
+
+        document
+          .getElementById(
+            "maintenanceMessage"
+          )
+          .value =
+          settings.maintenanceMessage ||
+          "";
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    }
+
+
+    document
+      .getElementById(
+        "updateForm"
+      )
+      .addEventListener(
+        "submit",
+        async event => {
+
+          event.preventDefault();
+
+          try {
+
+            await api(
+              "/admin/settings",
+              {
+                method: "PUT",
+
+                body:
+                  JSON.stringify({
+
+                    latestVersion:
+                      document
+                        .getElementById(
+                          "latestVersion"
+                        )
+                        .value
+                        .trim(),
+
+                    minimumVersion:
+                      document
+                        .getElementById(
+                          "minimumVersion"
+                        )
+                        .value
+                        .trim(),
+
+                    updateUrl:
+                      document
+                        .getElementById(
+                          "updateUrl"
+                        )
+                        .value
+                        .trim(),
+
+                    updateMessage:
+                      document
+                        .getElementById(
+                          "updateMessage"
+                        )
+                        .value
+                        .trim()
+
+                  })
+              }
+            );
+
+            alert(
+              "Update settings saved."
+            );
+
+          } catch (error) {
+
+            alert(error.message);
+
+          }
+
+        }
+      );
+
+
+    document
+      .getElementById(
+        "settingsForm"
+      )
+      .addEventListener(
+        "submit",
+        async event => {
+
+          event.preventDefault();
+
+          try {
+
+            await api(
+              "/admin/settings",
+              {
+                method: "PUT",
+
+                body:
+                  JSON.stringify({
+
+                    maintenanceMode:
+                      document
+                        .getElementById(
+                          "maintenanceMode"
+                        )
+                        .checked,
+
+                    maintenanceMessage:
+                      document
+                        .getElementById(
+                          "maintenanceMessage"
+                        )
+                        .value
+                        .trim()
+
+                  })
+              }
+            );
+
+            alert(
+              "Settings saved."
+            );
+
+          } catch (error) {
+
+            alert(error.message);
+
+          }
+
+        }
+      );
+
+
+    /* ==============================
+       START
+    =============================== */
+
+    if (token) {
+      showAdmin();
+    }
+
+    window.showPage =
+      showPage;
+
+    window.editStory =
+      editStory;
+
+    window.deleteStory =
+      deleteStory;
+
+    window.resetStoryForm =
+      resetStoryForm;
+
+  </script>
+
+</body>
+</html>
