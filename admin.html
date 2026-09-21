@@ -1,0 +1,2648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+  <meta name="theme-color" content="#070b14">
+
+  <title>Tech Story Admin</title>
+
+  <style>
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    :root{
+      --bg:#070b14;
+      --bg2:#0b1120;
+      --card:#101827;
+      --card2:#131d2e;
+      --border:#1f2b40;
+      --text:#f5f7fb;
+      --muted:#8d9ab0;
+      --primary:#4f8cff;
+      --primary2:#6c63ff;
+      --danger:#ff4d67;
+      --success:#25c985;
+      --warning:#ffb84d;
+    }
+
+    body{
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    button,
+    input,
+    textarea,
+    select{
+      font:inherit;
+    }
+
+    button{
+      cursor:pointer;
+    }
+
+    .hidden{
+      display:none!important;
+    }
+
+    /* LOGIN */
+
+    #loginPage{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background:
+        radial-gradient(circle at top,#16284b 0,#070b14 45%);
+    }
+
+    .login-card{
+      width:100%;
+      max-width:420px;
+      background:rgba(16,24,39,.95);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:32px;
+      box-shadow:0 25px 80px rgba(0,0,0,.45);
+    }
+
+    .brand{
+      text-align:center;
+      margin-bottom:28px;
+    }
+
+    .brand-logo{
+      width:72px;
+      height:72px;
+      margin:auto;
+      border-radius:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg,var(--primary),var(--primary2));
+      font-size:30px;
+      font-weight:900;
+      box-shadow:0 12px 40px rgba(79,140,255,.3);
+    }
+
+    .brand h1{
+      margin-top:16px;
+      font-size:27px;
+    }
+
+    .brand p{
+      color:var(--muted);
+      margin-top:6px;
+      font-size:14px;
+    }
+
+    .field{
+      margin-bottom:16px;
+    }
+
+    .field label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      color:#b8c2d3;
+      margin-bottom:8px;
+    }
+
+    input,
+    textarea,
+    select{
+      width:100%;
+      border:1px solid var(--border);
+      outline:none;
+      color:var(--text);
+      background:#0b1220;
+      border-radius:12px;
+      padding:13px 14px;
+      transition:.2s;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus{
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(79,140,255,.12);
+    }
+
+    textarea{
+      min-height:140px;
+      resize:vertical;
+    }
+
+    .btn{
+      border:0;
+      border-radius:12px;
+      padding:12px 16px;
+      font-weight:800;
+      color:white;
+      transition:.2s;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--primary),var(--primary2));
+    }
+
+    .btn-danger{
+      background:var(--danger);
+    }
+
+    .btn-success{
+      background:var(--success);
+    }
+
+    .btn-warning{
+      background:var(--warning);
+      color:#111;
+    }
+
+    .btn-secondary{
+      background:#202c40;
+    }
+
+    .login-btn{
+      width:100%;
+      margin-top:6px;
+    }
+
+    #loginError{
+      color:#ff7185;
+      font-size:13px;
+      margin-top:12px;
+      text-align:center;
+      min-height:18px;
+    }
+
+    /* APP */
+
+    #app{
+      min-height:100vh;
+    }
+
+    .topbar{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      height:70px;
+      background:rgba(7,11,20,.92);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 22px;
+      z-index:100;
+    }
+
+    .top-left{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .menu-btn{
+      width:42px;
+      height:42px;
+      border:1px solid var(--border);
+      background:#101827;
+      color:white;
+      border-radius:11px;
+      font-size:20px;
+    }
+
+    .top-title{
+      font-size:19px;
+      font-weight:900;
+    }
+
+    .top-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .admin-pill{
+      border:1px solid var(--border);
+      padding:8px 12px;
+      border-radius:20px;
+      color:#c7d1e1;
+      font-size:13px;
+    }
+
+    .sidebar{
+      position:fixed;
+      top:70px;
+      bottom:0;
+      left:0;
+      width:250px;
+      background:#090f1b;
+      border-right:1px solid var(--border);
+      padding:18px 12px;
+      z-index:90;
+      overflow:auto;
+      transition:.25s;
+    }
+
+    .nav-label{
+      color:#68758b;
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      padding:12px 12px 8px;
+      letter-spacing:.08em;
+    }
+
+    .nav-btn{
+      width:100%;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      border:0;
+      background:transparent;
+      color:#aeb9ca;
+      padding:12px;
+      border-radius:11px;
+      text-align:left;
+      margin-bottom:4px;
+      font-weight:700;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active{
+      color:white;
+      background:#131e31;
+    }
+
+    .nav-icon{
+      width:24px;
+      text-align:center;
+    }
+
+    .content{
+      margin-left:250px;
+      padding:95px 25px 40px;
+      max-width:1500px;
+    }
+
+    .page{
+      display:none;
+    }
+
+    .page.active{
+      display:block;
+    }
+
+    .page-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      margin-bottom:22px;
+    }
+
+    .page-header h2{
+      font-size:27px;
+    }
+
+    .page-header p{
+      color:var(--muted);
+      margin-top:5px;
+      font-size:14px;
+    }
+
+    /* STATS */
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:16px;
+      margin-bottom:24px;
+    }
+
+    .stat{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:17px;
+      padding:20px;
+    }
+
+    .stat-title{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .stat-value{
+      font-size:30px;
+      font-weight:900;
+      margin-top:8px;
+    }
+
+    /* CARDS */
+
+    .panel{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:20px;
+      margin-bottom:20px;
+    }
+
+    .panel-title{
+      font-size:17px;
+      font-weight:900;
+      margin-bottom:17px;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+    }
+
+    /* STORIES */
+
+    .story-list{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .story{
+      display:flex;
+      gap:15px;
+      align-items:center;
+      padding:14px;
+      background:#0b1220;
+      border:1px solid var(--border);
+      border-radius:14px;
+    }
+
+    .story-image{
+      width:95px;
+      height:70px;
+      object-fit:cover;
+      border-radius:10px;
+      background:#172236;
+      flex-shrink:0;
+    }
+
+    .story-info{
+      flex:1;
+      min-width:0;
+    }
+
+    .story-title{
+      font-weight:800;
+      line-height:1.3;
+    }
+
+    .story-meta{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:5px;
+    }
+
+    .story-actions{
+      display:flex;
+      gap:7px;
+      flex-wrap:wrap;
+    }
+
+    .small-btn{
+      padding:8px 10px;
+      border-radius:9px;
+      border:0;
+      color:white;
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      padding:5px 8px;
+      border-radius:20px;
+      font-size:11px;
+      font-weight:800;
+      background:#1a2940;
+      color:#9fc0ff;
+    }
+
+    .badge-success{
+      color:#73e7b8;
+      background:rgba(37,201,133,.12);
+    }
+
+    .badge-warning{
+      color:#ffd083;
+      background:rgba(255,184,77,.12);
+    }
+
+    /* CATEGORY */
+
+    .category-list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .category-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:13px 15px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#0b1220;
+    }
+
+    /* NOTIFICATIONS */
+
+    .notification{
+      border:1px solid var(--border);
+      background:#0b1220;
+      border-radius:13px;
+      padding:15px;
+      margin-bottom:10px;
+    }
+
+    .notification h4{
+      margin-bottom:5px;
+    }
+
+    .notification p{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    /* SETTINGS */
+
+    .setting-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:15px;
+      padding:16px 0;
+      border-bottom:1px solid var(--border);
+    }
+
+    .setting-row:last-child{
+      border-bottom:0;
+    }
+
+    .setting-info strong{
+      display:block;
+    }
+
+    .setting-info span{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      margin-top:4px;
+    }
+
+    .switch{
+      position:relative;
+      width:48px;
+      height:27px;
+    }
+
+    .switch input{
+      display:none;
+    }
+
+    .slider{
+      position:absolute;
+      inset:0;
+      background:#273348;
+      border-radius:30px;
+      cursor:pointer;
+    }
+
+    .slider:before{
+      content:"";
+      position:absolute;
+      width:21px;
+      height:21px;
+      left:3px;
+      top:3px;
+      background:white;
+      border-radius:50%;
+      transition:.2s;
+    }
+
+    .switch input:checked + .slider{
+      background:var(--primary);
+    }
+
+    .switch input:checked + .slider:before{
+      transform:translateX(21px);
+    }
+
+    /* MODAL */
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.7);
+      backdrop-filter:blur(7px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:500;
+    }
+
+    .modal-card{
+      width:100%;
+      max-width:720px;
+      max-height:90vh;
+      overflow:auto;
+      background:#0d1524;
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:23px;
+    }
+
+    .modal-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .close{
+      width:38px;
+      height:38px;
+      border:0;
+      border-radius:10px;
+      background:#1a2638;
+      color:white;
+      font-size:20px;
+    }
+
+    .form-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      margin-top:20px;
+    }
+
+    /* TOAST */
+
+    #toast{
+      position:fixed;
+      bottom:25px;
+      right:25px;
+      max-width:350px;
+      padding:14px 17px;
+      background:#162238;
+      border:1px solid var(--border);
+      border-radius:12px;
+      box-shadow:0 15px 40px rgba(0,0,0,.4);
+      z-index:1000;
+      transform:translateY(120px);
+      opacity:0;
+      transition:.25s;
+    }
+
+    #toast.show{
+      transform:translateY(0);
+      opacity:1;
+    }
+
+    #toast.success{
+      border-color:rgba(37,201,133,.5);
+    }
+
+    #toast.error{
+      border-color:rgba(255,77,103,.5);
+    }
+
+    /* LOADER */
+
+    .loader{
+      display:inline-block;
+      width:16px;
+      height:16px;
+      border:2px solid rgba(255,255,255,.3);
+      border-top-color:white;
+      border-radius:50%;
+      animation:spin .7s linear infinite;
+      vertical-align:middle;
+    }
+
+    @keyframes spin{
+      to{transform:rotate(360deg)}
+    }
+
+    @media(max-width:1000px){
+      .stats{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .grid-3{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media(max-width:760px){
+      .sidebar{
+        transform:translateX(-100%);
+      }
+
+      .sidebar.open{
+        transform:translateX(0);
+      }
+
+      .content{
+        margin-left:0;
+        padding:90px 15px 30px;
+      }
+
+      .topbar{
+        padding:0 14px;
+      }
+
+      .admin-pill{
+        display:none;
+      }
+
+      .stats{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+      }
+
+      .stat{
+        padding:15px;
+      }
+
+      .stat-value{
+        font-size:24px;
+      }
+
+      .grid-2,
+      .grid-3{
+        grid-template-columns:1fr;
+      }
+
+      .page-header{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .story{
+        align-items:flex-start;
+      }
+
+      .story-image{
+        width:80px;
+        height:60px;
+      }
+
+      .story-actions{
+        margin-top:8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<section id="loginPage">
+
+  <div class="login-card">
+
+    <div class="brand">
+      <div class="brand-logo">TS</div>
+      <h1>Tech Story</h1>
+      <p>Administrator Dashboard</p>
+    </div>
+
+    <form id="loginForm">
+
+      <div class="field">
+        <label>Username</label>
+        <input
+          id="username"
+          type="text"
+          placeholder="Admin username"
+          autocomplete="username"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="Admin password"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <button class="btn btn-primary login-btn" id="loginBtn">
+        Login
+      </button>
+
+      <div id="loginError"></div>
+
+    </form>
+
+  </div>
+
+</section>
+
+
+<!-- APP -->
+
+<section id="app" class="hidden">
+
+  <header class="topbar">
+
+    <div class="top-left">
+
+      <button class="menu-btn" id="menuBtn">
+        ☰
+      </button>
+
+      <div class="top-title">
+        Tech Story Admin
+      </div>
+
+    </div>
+
+    <div class="top-right">
+
+      <div class="admin-pill">
+        Administrator
+      </div>
+
+      <button class="btn btn-danger" id="logoutBtn">
+        Logout
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar" id="sidebar">
+
+    <div class="nav-label">Management</div>
+
+    <button class="nav-btn active" data-page="dashboard">
+      <span class="nav-icon">▦</span>
+      Dashboard
+    </button>
+
+    <button class="nav-btn" data-page="stories">
+      <span class="nav-icon">▤</span>
+      Posts
+    </button>
+
+    <button class="nav-btn" data-page="categories">
+      <span class="nav-icon">▦</span>
+      Categories
+    </button>
+
+    <button class="nav-btn" data-page="notifications">
+      <span class="nav-icon">◉</span>
+      Notifications
+    </button>
+
+    <div class="nav-label">System</div>
+
+    <button class="nav-btn" data-page="updates">
+      <span class="nav-icon">↻</span>
+      App Updates
+    </button>
+
+    <button class="nav-btn" data-page="settings">
+      <span class="nav-icon">⚙</span>
+      Settings
+    </button>
+
+  </aside>
+
+
+  <main class="content">
+
+
+    <!-- DASHBOARD -->
+
+    <section class="page active" id="page-dashboard">
+
+      <div class="page-header">
+
+        <div>
+          <h2>Dashboard</h2>
+          <p>Overview of your Tech Story application.</p>
+        </div>
+
+        <button class="btn btn-primary" onclick="openStoryModal()">
+          + New Post
+        </button>
+
+      </div>
+
+
+      <div class="stats">
+
+        <div class="stat">
+          <div class="stat-title">Total Posts</div>
+          <div class="stat-value" id="statStories">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-title">Categories</div>
+          <div class="stat-value" id="statCategories">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-title">Users</div>
+          <div class="stat-value" id="statUsers">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-title">Notifications</div>
+          <div class="stat-value" id="statNotifications">0</div>
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          Recent Posts
+        </div>
+
+        <div id="dashboardStories" class="story-list">
+          Loading...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- STORIES -->
+
+    <section class="page" id="page-stories">
+
+      <div class="page-header">
+
+        <div>
+          <h2>Posts</h2>
+          <p>Create and manage Tech Story articles.</p>
+        </div>
+
+        <button class="btn btn-primary" onclick="openStoryModal()">
+          + Add Post
+        </button>
+
+      </div>
+
+      <div class="panel">
+
+        <div class="story-list" id="storiesList">
+          Loading...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CATEGORIES -->
+
+    <section class="page" id="page-categories">
+
+      <div class="page-header">
+
+        <div>
+          <h2>Categories</h2>
+          <p>Manage article categories.</p>
+        </div>
+
+      </div>
+
+
+      <div class="grid-2">
+
+        <div class="panel">
+
+          <div class="panel-title">
+            Add Category
+          </div>
+
+          <form id="categoryForm">
+
+            <div class="field">
+
+              <label>Name</label>
+
+              <input
+                id="categoryName"
+                placeholder="Example: AI"
+                required
+              >
+
+            </div>
+
+            <button class="btn btn-primary">
+              Add Category
+            </button>
+
+          </form>
+
+        </div>
+
+
+        <div class="panel">
+
+          <div class="panel-title">
+            Existing Categories
+          </div>
+
+          <div id="categoriesList" class="category-list">
+            Loading...
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- NOTIFICATIONS -->
+
+    <section class="page" id="page-notifications">
+
+      <div class="page-header">
+
+        <div>
+          <h2>Notifications</h2>
+          <p>Create announcements for your application.</p>
+        </div>
+
+      </div>
+
+
+      <div class="grid-2">
+
+        <div class="panel">
+
+          <div class="panel-title">
+            New Notification
+          </div>
+
+          <form id="notificationForm">
+
+            <div class="field">
+
+              <label>Title</label>
+
+              <input
+                id="notificationTitle"
+                placeholder="New Tech Story update"
+                required
+              >
+
+            </div>
+
+            <div class="field">
+
+              <label>Message</label>
+
+              <textarea
+                id="notificationMessage"
+                placeholder="Write your announcement..."
+                required
+              ></textarea>
+
+            </div>
+
+            <button class="btn btn-primary">
+              Publish Notification
+            </button>
+
+          </form>
+
+        </div>
+
+
+        <div class="panel">
+
+          <div class="panel-title">
+            Notifications
+          </div>
+
+          <div id="notificationsList">
+            Loading...
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- UPDATES -->
+
+    <section class="page" id="page-updates">
+
+      <div class="page-header">
+
+        <div>
+          <h2>App Updates</h2>
+          <p>Control the version displayed to Tech Story users.</p>
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="field">
+
+          <label>Latest Version</label>
+
+          <input
+            id="latestVersion"
+            placeholder="1.0.1"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>Minimum Version</label>
+
+          <input
+            id="minimumVersion"
+            placeholder="1.0.0"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>Update Download URL</label>
+
+          <input
+            id="updateUrl"
+            placeholder="https://github.com/.../releases/download/..."
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>Update Message</label>
+
+          <textarea
+            id="updateMessage"
+            placeholder="A new version of Tech Story is available."
+          ></textarea>
+
+        </div>
+
+
+        <button class="btn btn-primary" onclick="saveUpdateSettings()">
+          Save Update Settings
+        </button>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-title">
+          How Updates Work
+        </div>
+
+        <p style="color:var(--muted);line-height:1.7;font-size:14px">
+          The Tech Story app can check these settings when it starts.
+          If the installed version is older than the latest version,
+          the app can show an update message and provide the download
+          link for the new APK.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+
+    <section class="page" id="page-settings">
+
+      <div class="page-header">
+
+        <div>
+          <h2>Settings</h2>
+          <p>Control general application settings.</p>
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="setting-row">
+
+          <div class="setting-info">
+
+            <strong>Maintenance Mode</strong>
+
+            <span>
+              Temporarily show a maintenance message to users.
+            </span>
+
+          </div>
+
+          <label class="switch">
+
+            <input
+              type="checkbox"
+              id="maintenanceMode"
+            >
+
+            <span class="slider"></span>
+
+          </label>
+
+        </div>
+
+
+        <div class="field" style="margin-top:20px">
+
+          <label>Maintenance Message</label>
+
+          <textarea
+            id="maintenanceMessage"
+            placeholder="Tech Story is currently under maintenance."
+          ></textarea>
+
+        </div>
+
+
+        <button
+          class="btn btn-primary"
+          onclick="saveGeneralSettings()"
+        >
+          Save Settings
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</section>
+
+
+<!-- STORY MODAL -->
+
+<div class="modal hidden" id="storyModal">
+
+  <div class="modal-card">
+
+    <div class="modal-header">
+
+      <h2 id="storyModalTitle">
+        Add Post
+      </h2>
+
+      <button class="close" onclick="closeStoryModal()">
+        ×
+      </button>
+
+    </div>
+
+
+    <form id="storyForm">
+
+      <input type="hidden" id="storyId">
+
+
+      <div class="field">
+
+        <label>Title</label>
+
+        <input
+          id="storyTitle"
+          placeholder="Enter article title"
+          required
+        >
+
+      </div>
+
+
+      <div class="grid-2">
+
+        <div class="field">
+
+          <label>Category</label>
+
+          <select id="storyCategory">
+            <option value="">Select category</option>
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>Status</label>
+
+          <select id="storyStatus">
+
+            <option value="published">
+              Published
+            </option>
+
+            <option value="draft">
+              Draft
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Description</label>
+
+        <textarea
+          id="storyDescription"
+          placeholder="Short description..."
+          required
+        ></textarea>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Article Content</label>
+
+        <textarea
+          id="storyContent"
+          placeholder="Write the full story here..."
+          style="min-height:220px"
+          required
+        ></textarea>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Cover Image URL</label>
+
+        <input
+          id="storyImage"
+          placeholder="https://..."
+        >
+
+      </div>
+
+
+      <div class="grid-2">
+
+        <div class="field">
+
+          <label>Author</label>
+
+          <input
+            id="storyAuthor"
+            placeholder="Sila Tech"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>Read Time</label>
+
+          <input
+            id="storyReadTime"
+            placeholder="5 min read"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="grid-2">
+
+        <div class="field">
+
+          <label>Featured</label>
+
+          <select id="storyFeatured">
+
+            <option value="false">
+              No
+            </option>
+
+            <option value="true">
+              Yes
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>Trending</label>
+
+          <select id="storyTrending">
+
+            <option value="false">
+              No
+            </option>
+
+            <option value="true">
+              Yes
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onclick="closeStoryModal()"
+        >
+          Cancel
+        </button>
+
+        <button class="btn btn-primary">
+          Save Post
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<div id="toast"></div>
+
+
+<script>
+/*
+========================================================
+TECH STORY ADMIN PANEL
+========================================================
+
+IMPORTANT:
+Change this URL to your REAL backend URL.
+
+Example:
+https://tech-story-api.onrender.com/api
+
+DO NOT use localhost after deployment.
+========================================================
+*/
+
+const API_URL = "https://admin-tech-story.vercel.app/admin.html";
+
+const TOKEN_KEY = "techStoryAdminToken";
+
+let stories = [];
+let categories = [];
+let notifications = [];
+let editingStoryId = null;
+
+
+/* ======================================================
+   HELPERS
+====================================================== */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+
+function showToast(message,type="success"){
+
+  const toast = $("toast");
+
+  toast.textContent = message;
+
+  toast.className = "";
+
+  toast.id = "toast";
+
+  toast.classList.add("show",type);
+
+  setTimeout(()=>{
+    toast.classList.remove("show");
+  },3000);
+}
+
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+function token(){
+
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+
+async function api(path,options={}){
+
+  const headers = {
+    "Content-Type":"application/json",
+    ...(options.headers || {})
+  };
+
+  const t = token();
+
+  if(t){
+    headers.Authorization = `Bearer ${t}`;
+  }
+
+  let response;
+
+  try{
+
+    response = await fetch(API_URL + path,{
+      ...options,
+      headers
+    });
+
+  }catch(error){
+
+    throw new Error(
+      "Cannot connect to backend. Check your API URL."
+    );
+
+  }
+
+  let data = {};
+
+  try{
+    data = await response.json();
+  }catch{
+    data = {};
+  }
+
+  if(response.status === 401){
+
+    logout();
+
+    throw new Error("Session expired. Please login again.");
+
+  }
+
+  if(!response.ok){
+
+    throw new Error(
+      data.message ||
+      data.error ||
+      "Request failed."
+    );
+
+  }
+
+  return data;
+}
+
+
+/* ======================================================
+   AUTH
+====================================================== */
+
+async function login(username,password){
+
+  try{
+
+    const data = await api("/auth/login",{
+      method:"POST",
+      body:JSON.stringify({
+        username,
+        password
+      })
+    });
+
+    const jwt =
+      data.token ||
+      data.accessToken ||
+      data.jwt;
+
+    if(!jwt){
+
+      throw new Error(
+        "Login succeeded but server did not return a token."
+      );
+
+    }
+
+    localStorage.setItem(TOKEN_KEY,jwt);
+
+    showApp();
+
+    showToast("Login successful");
+
+    await loadEverything();
+
+  }catch(error){
+
+    $("loginError").textContent =
+      error.message || "Login failed.";
+
+  }
+}
+
+
+$("loginForm").addEventListener("submit",async e=>{
+
+  e.preventDefault();
+
+  const username =
+    $("username").value.trim();
+
+  const password =
+    $("password").value;
+
+  $("loginError").textContent = "";
+
+  $("loginBtn").disabled = true;
+
+  $("loginBtn").innerHTML =
+    '<span class="loader"></span> Logging in...';
+
+  await login(username,password);
+
+  $("loginBtn").disabled = false;
+
+  $("loginBtn").textContent = "Login";
+
+});
+
+
+function logout(){
+
+  localStorage.removeItem(TOKEN_KEY);
+
+  $("app").classList.add("hidden");
+
+  $("loginPage").classList.remove("hidden");
+
+}
+
+
+$("logoutBtn").addEventListener("click",logout);
+
+
+function showApp(){
+
+  $("loginPage").classList.add("hidden");
+
+  $("app").classList.remove("hidden");
+
+}
+
+
+/* ======================================================
+   NAVIGATION
+====================================================== */
+
+document.querySelectorAll(".nav-btn").forEach(btn=>{
+
+  btn.addEventListener("click",()=>{
+
+    const page = btn.dataset.page;
+
+    document.querySelectorAll(".nav-btn")
+      .forEach(x=>x.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    document.querySelectorAll(".page")
+      .forEach(x=>x.classList.remove("active"));
+
+    const target =
+      document.getElementById("page-"+page);
+
+    if(target){
+      target.classList.add("active");
+    }
+
+    $("sidebar").classList.remove("open");
+
+  });
+
+});
+
+
+$("menuBtn").addEventListener("click",()=>{
+
+  $("sidebar").classList.toggle("open");
+
+});
+
+
+/* ======================================================
+   LOAD EVERYTHING
+====================================================== */
+
+async function loadEverything(){
+
+  try{
+
+    await Promise.all([
+      loadStories(),
+      loadCategories(),
+      loadNotifications(),
+      loadUsers(),
+      loadSettings()
+    ]);
+
+    updateStats();
+
+  }catch(error){
+
+    showToast(error.message,"error");
+
+  }
+
+}
+
+
+/* ======================================================
+   STORIES
+====================================================== */
+
+async function loadStories(){
+
+  const data =
+    await api("/stories");
+
+  stories =
+    Array.isArray(data)
+      ? data
+      : data.stories || data.data || [];
+
+  renderStories();
+
+}
+
+
+function updateStats(){
+
+  $("statStories").textContent =
+    stories.length;
+
+  $("statCategories").textContent =
+    categories.length;
+
+  $("statNotifications").textContent =
+    notifications.length;
+
+}
+
+
+function renderStories(){
+
+  const list =
+    $("storiesList");
+
+  const dashboard =
+    $("dashboardStories");
+
+  if(!stories.length){
+
+    list.innerHTML =
+      '<p style="color:var(--muted)">No posts yet.</p>';
+
+    dashboard.innerHTML =
+      '<p style="color:var(--muted)">No posts yet.</p>';
+
+    return;
+
+  }
+
+  const html =
+    stories.map(story=>storyHTML(story)).join("");
+
+  list.innerHTML = html;
+
+  dashboard.innerHTML =
+    stories
+      .slice(0,5)
+      .map(story=>storyHTML(story))
+      .join("");
+
+}
+
+
+function storyHTML(story){
+
+  const id =
+    story._id ||
+    story.id;
+
+  const title =
+    escapeHTML(story.title || "Untitled");
+
+  const description =
+    escapeHTML(story.description || "");
+
+  const category =
+    escapeHTML(story.category || "General");
+
+  const author =
+    escapeHTML(story.author || "Tech Story");
+
+  const status =
+    story.status || "published";
+
+  const image =
+    escapeHTML(
+      story.image ||
+      story.coverImage ||
+      ""
+    );
+
+  return `
+    <div class="story">
+
+      ${
+        image
+        ?
+        `<img
+          class="story-image"
+          src="${image}"
+          alt=""
+          onerror="this.style.display='none'"
+        >`
+        :
+        `<div class="story-image"></div>`
+      }
+
+      <div class="story-info">
+
+        <div class="story-title">
+          ${title}
+        </div>
+
+        <div class="story-meta">
+          ${category}
+          ·
+          ${author}
+        </div>
+
+        <div style="margin-top:7px">
+
+          <span class="badge ${
+            status === "published"
+              ? "badge-success"
+              : "badge-warning"
+          }">
+            ${escapeHTML(status)}
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="story-actions">
+
+        <button
+          class="small-btn btn-secondary"
+          onclick="editStory('${id}')"
+        >
+          Edit
+        </button>
+
+        <button
+          class="small-btn btn-danger"
+          onclick="deleteStory('${id}')"
+        >
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* ======================================================
+   STORY MODAL
+====================================================== */
+
+function openStoryModal(story=null){
+
+  editingStoryId =
+    story
+      ? (story._id || story.id)
+      : null;
+
+  $("storyModal").classList.remove("hidden");
+
+  $("storyModalTitle").textContent =
+    story
+      ? "Edit Post"
+      : "Add Post";
+
+  $("storyId").value =
+    editingStoryId || "";
+
+  $("storyTitle").value =
+    story?.title || "";
+
+  $("storyCategory").value =
+    story?.category || "";
+
+  $("storyStatus").value =
+    story?.status || "published";
+
+  $("storyDescription").value =
+    story?.description || "";
+
+  $("storyContent").value =
+    story?.content ||
+    story?.article ||
+    "";
+
+  $("storyImage").value =
+    story?.image ||
+    story?.coverImage ||
+    "";
+
+  $("storyAuthor").value =
+    story?.author ||
+    "Sila Tech";
+
+  $("storyReadTime").value =
+    story?.readTime ||
+    "5 min read";
+
+  $("storyFeatured").value =
+    String(
+      story?.featured === true
+    );
+
+  $("storyTrending").value =
+    String(
+      story?.trending === true
+    );
+
+}
+
+
+function closeStoryModal(){
+
+  $("storyModal").classList.add("hidden");
+
+  editingStoryId = null;
+
+}
+
+
+async function editStory(id){
+
+  const story =
+    stories.find(
+      x => String(x._id || x.id) === String(id)
+    );
+
+  if(!story){
+
+    showToast(
+      "Post not found.",
+      "error"
+    );
+
+    return;
+
+  }
+
+  openStoryModal(story);
+
+}
+
+
+$("storyForm").addEventListener("submit",async e=>{
+
+  e.preventDefault();
+
+  const payload = {
+
+    title:
+      $("storyTitle").value.trim(),
+
+    category:
+      $("storyCategory").value,
+
+    status:
+      $("storyStatus").value,
+
+    description:
+      $("storyDescription").value.trim(),
+
+    content:
+      $("storyContent").value,
+
+    image:
+      $("storyImage").value.trim(),
+
+    author:
+      $("storyAuthor").value.trim(),
+
+    readTime:
+      $("storyReadTime").value.trim(),
+
+    featured:
+      $("storyFeatured").value === "true",
+
+    trending:
+      $("storyTrending").value === "true"
+
+  };
+
+
+  try{
+
+    if(editingStoryId){
+
+      await api(
+        "/admin/stories/" +
+        encodeURIComponent(editingStoryId),
+        {
+          method:"PUT",
+          body:JSON.stringify(payload)
+        }
+      );
+
+      showToast("Post updated successfully.");
+
+    }else{
+
+      await api("/admin/stories",{
+        method:"POST",
+        body:JSON.stringify(payload)
+      });
+
+      showToast("Post created successfully.");
+
+    }
+
+    closeStoryModal();
+
+    await loadStories();
+
+    updateStats();
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }
+
+});
+
+
+async function deleteStory(id){
+
+  if(
+    !confirm(
+      "Delete this post permanently?"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    await api(
+      "/admin/stories/" +
+      encodeURIComponent(id),
+      {
+        method:"DELETE"
+      }
+    );
+
+    showToast(
+      "Post deleted successfully."
+    );
+
+    await loadStories();
+
+    updateStats();
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* ======================================================
+   CATEGORIES
+====================================================== */
+
+async function loadCategories(){
+
+  const data =
+    await api("/categories");
+
+  categories =
+    Array.isArray(data)
+      ? data
+      : data.categories ||
+        data.data ||
+        [];
+
+  renderCategories();
+
+  fillCategorySelect();
+
+}
+
+
+function renderCategories(){
+
+  const list =
+    $("categoriesList");
+
+  if(!categories.length){
+
+    list.innerHTML =
+      '<p style="color:var(--muted)">No categories.</p>';
+
+    return;
+
+  }
+
+  list.innerHTML =
+    categories.map(category=>{
+
+      const id =
+        category._id ||
+        category.id;
+
+      const name =
+        escapeHTML(
+          category.name ||
+          category.title ||
+          "Unnamed"
+        );
+
+      return `
+        <div class="category-row">
+
+          <strong>${name}</strong>
+
+          <button
+            class="small-btn btn-danger"
+            onclick="deleteCategory('${id}')"
+          >
+            Delete
+          </button>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+function fillCategorySelect(){
+
+  const select =
+    $("storyCategory");
+
+  select.innerHTML =
+    '<option value="">Select category</option>';
+
+  categories.forEach(category=>{
+
+    const name =
+      category.name ||
+      category.title ||
+      "";
+
+    if(!name){
+      return;
+    }
+
+    const option =
+      document.createElement("option");
+
+    option.value = name;
+
+    option.textContent = name;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+
+$("categoryForm").addEventListener("submit",async e=>{
+
+  e.preventDefault();
+
+  const name =
+    $("categoryName").value.trim();
+
+  if(!name){
+    return;
+  }
+
+  try{
+
+    await api("/admin/categories",{
+      method:"POST",
+      body:JSON.stringify({
+        name
+      })
+    });
+
+    $("categoryName").value = "";
+
+    showToast(
+      "Category created."
+    );
+
+    await loadCategories();
+
+    updateStats();
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }
+
+});
+
+
+async function deleteCategory(id){
+
+  if(
+    !confirm(
+      "Delete this category?"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    await api(
+      "/admin/categories/" +
+      encodeURIComponent(id),
+      {
+        method:"DELETE"
+      }
+    );
+
+    showToast(
+      "Category deleted."
+    );
+
+    await loadCategories();
+
+    updateStats();
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* ======================================================
+   NOTIFICATIONS
+====================================================== */
+
+async function loadNotifications(){
+
+  const data =
+    await api("/notifications");
+
+  notifications =
+    Array.isArray(data)
+      ? data
+      : data.notifications ||
+        data.data ||
+        [];
+
+  renderNotifications();
+
+}
+
+
+function renderNotifications(){
+
+  const list =
+    $("notificationsList");
+
+  if(!notifications.length){
+
+    list.innerHTML =
+      '<p style="color:var(--muted)">No notifications yet.</p>';
+
+    return;
+
+  }
+
+  list.innerHTML =
+    notifications.map(notification=>{
+
+      const id =
+        notification._id ||
+        notification.id;
+
+      return `
+        <div class="notification">
+
+          <h4>
+            ${escapeHTML(
+              notification.title ||
+              "Notification"
+            )}
+          </h4>
+
+          <p>
+            ${escapeHTML(
+              notification.message ||
+              ""
+            )}
+          </p>
+
+          <button
+            class="small-btn btn-danger"
+            style="margin-top:10px"
+            onclick="deleteNotification('${id}')"
+          >
+            Delete
+          </button>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+$("notificationForm").addEventListener("submit",async e=>{
+
+  e.preventDefault();
+
+  const title =
+    $("notificationTitle").value.trim();
+
+  const message =
+    $("notificationMessage").value.trim();
+
+  try{
+
+    await api("/admin/notifications",{
+      method:"POST",
+      body:JSON.stringify({
+        title,
+        message
+      })
+    });
+
+    $("notificationTitle").value = "";
+
+    $("notificationMessage").value = "";
+
+    showToast(
+      "Notification created."
+    );
+
+    await loadNotifications();
+
+    updateStats();
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }
+
+});
+
+
+async function deleteNotification(id){
+
+  if(
+    !confirm(
+      "Delete this notification?"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    await api(
+      "/admin/notifications/" +
+      encodeURIComponent(id),
+      {
+        method:"DELETE"
+      }
+    );
+
+    showToast(
+      "Notification deleted."
+    );
+
+    await loadNotifications();
+
+    updateStats();
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* ======================================================
+   USERS
+====================================================== */
+
+async function loadUsers(){
+
+  try{
+
+    const data =
+      await api("/admin/users");
+
+    const users =
+      Array.isArray(data)
+        ? data
+        : data.users ||
+          data.data ||
+          [];
+
+    $("statUsers").textContent =
+      users.length;
+
+  }catch{
+
+    $("statUsers").textContent = "0";
+
+  }
+
+}
+
+
+/* ======================================================
+   SETTINGS
+====================================================== */
+
+async function loadSettings(){
+
+  const data =
+    await api("/settings");
+
+  const settings =
+    data.settings ||
+    data.data ||
+    data;
+
+  $("latestVersion").value =
+    settings.latestVersion ||
+    "";
+
+  $("minimumVersion").value =
+    settings.minimumVersion ||
+    "";
+
+  $("updateUrl").value =
+    settings.updateUrl ||
+    "";
+
+  $("updateMessage").value =
+    settings.updateMessage ||
+    "";
+
+  $("maintenanceMode").checked =
+    settings.maintenanceMode === true;
+
+  $("maintenanceMessage").value =
+    settings.maintenanceMessage ||
+    "";
+
+}
+
+
+async function saveUpdateSettings(){
+
+  const payload = {
+
+    latestVersion:
+      $("latestVersion").value.trim(),
+
+    minimumVersion:
+      $("minimumVersion").value.trim(),
+
+    updateUrl:
+      $("updateUrl").value.trim(),
+
+    updateMessage:
+      $("updateMessage").value.trim()
+
+  };
+
+  try{
+
+    await api("/admin/settings",{
+      method:"PUT",
+      body:JSON.stringify(payload)
+    });
+
+    showToast(
+      "Update settings saved."
+    );
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+async function saveGeneralSettings(){
+
+  const payload = {
+
+    maintenanceMode:
+      $("maintenanceMode").checked,
+
+    maintenanceMessage:
+      $("maintenanceMessage").value.trim()
+
+  };
+
+  try{
+
+    await api("/admin/settings",{
+      method:"PUT",
+      body:JSON.stringify(payload)
+    });
+
+    showToast(
+      "Settings saved."
+    );
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* ======================================================
+   START
+====================================================== */
+
+async function start(){
+
+  if(!token()){
+
+    $("loginPage").classList.remove("hidden");
+
+    $("app").classList.add("hidden");
+
+    return;
+
+  }
+
+  showApp();
+
+  try{
+
+    await loadEverything();
+
+  }catch(error){
+
+    showToast(
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+start();
+
+</script>
+
+</body>
+</html>
