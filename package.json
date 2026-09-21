@@ -1,0 +1,18 @@
+{
+  "name": "tech-story",
+  "version": "1.0.0",
+  "description": "Tech Story - Modern technology stories and news app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/cli": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "vite": "^7.1.7"
+  }
+}
