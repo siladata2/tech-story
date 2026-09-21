@@ -1,0 +1,8 @@
+{
+  "appId": "com.techstory.app",
+  "appName": "Tech Story",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
